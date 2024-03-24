@@ -1,0 +1,16 @@
+
+.cache
+.github
+node_modules
+tests/cache
+tests/resultCache*
+.babelrc
+.gitignore
+composer.*
+package.json
+php*.dist
+yarn.lock
+postcss.config.js
+webpack.config.js
+/admin/assets/src
+/public/assets/src

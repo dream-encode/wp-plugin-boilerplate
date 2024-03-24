@@ -1,0 +1,31 @@
+parameters:
+    level: 8
+    treatPhpDocTypesAsCertain: false
+    checkMissingIterableValueType: false
+    checkUninitializedProperties: false
+    tmpDir: tests
+    paths:
+        - PLUGIN_SLUG.php
+        - includes
+        - admin
+        - public
+    scanFiles:
+        - includes/PLUGIN_SLUG-constants.php
+    scanDirectories:
+        - includes
+    excludePaths:
+        - node_modules/*
+    bootstrapFiles:
+        - includes/PLUGIN_SLUG-constants.php
+        - %rootDir%/../../php-stubs/wordpress-stubs/wordpress-stubs.php
+        - %rootDir%/../../php-stubs/woocommerce-stubs/woocommerce-stubs.php
+        - %rootDir%/../../php-stubs/woocommerce-stubs/woocommerce-packages-stubs.php
+        - %rootDir%/../../php-stubs/acf-pro-stubs/acf-pro-stubs.php
+        - %rootDir%/../../php-stubs/wp-cli-stubs/wp-cli-stubs.php
+        - %rootDir%/../../php-stubs/wp-cli-stubs/wp-cli-commands-stubs.php
+        - %rootDir%/../../php-stubs/wp-cli-stubs/wp-cli-i18n-stubs.php
+    ignoreErrors:
+        -
+            message: '#Variable \$[a-zA-Z0-9\\_]+ might not be defined#'
+            paths:
+                - admin/partials/*

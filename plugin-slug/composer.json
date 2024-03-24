@@ -1,0 +1,45 @@
+{
+    "name": "dream-encode/PLUGIN_SLUG",
+	"description": "PLUGIN_DESCRIPTION",
+	"homepage": "PLUGIN_GH_REPO_URL",
+    "license": "proprietary",
+	"authors": [
+		{
+			"name": "David Baumwald",
+			"homepage": "https://dream-encode.com/"
+		}
+	],
+	"config": {
+		"sort-packages": true,
+		"preferred-install": "dist",
+		"allow-plugins": {
+			"composer/installers": true,
+			"cweagans/composer-patches": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"roots/wordpress-core-installer": true,
+            "phpstan/extension-installer": true
+		}
+	},
+    "minimum-stability": "dev",
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^1",
+        "php-stubs/acf-pro-stubs": "dev-master",
+        "php-stubs/woocommerce-stubs": "^7.4",
+        "php-stubs/wp-cli-stubs": "dev-master",
+        "phpcompatibility/phpcompatibility-wp": "2.1.4",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan": "1.9",
+        "phpunit/phpunit": "^9",
+        "squizlabs/php_codesniffer": "^3.7",
+        "szepeviktor/phpstan-wordpress": "1.1.5",
+        "vlucas/phpdotenv": "5.5",
+        "wp-coding-standards/wpcs": "2.3",
+        "yoast/phpunit-polyfills": "^1.0"
+    },
+    "scripts": {
+        "lint": "./vendor/bin/phpcs -nps --colors --report-code --report-summary --report-width=80 --cache .",
+        "format": "./vendor/bin/phpcbf --standard=phpcs.xml.dist .",
+        "analyze": "./vendor/bin/phpstan",
+		"test": "composer lint && composer analyze"
+    }
+}

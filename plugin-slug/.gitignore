@@ -1,0 +1,7 @@
+node_modules
+vendor
+composer.lock
+tests
+.cache
+admin/assets/dist
+public/assets/dist
