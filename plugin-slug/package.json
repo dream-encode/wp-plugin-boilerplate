@@ -1,5 +1,4 @@
 {
-  "name": "GH_REPO_URL",
   "version": "1.0.0",
   "description": "PLUGIN_DESCRIPTION",
   "main": "webpack.config.js",
