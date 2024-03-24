@@ -21,8 +21,8 @@ then
 fi
 
 # Plugin description.
-read -p "Plugin description: " PLUGIN_DESCRIPION
-if [ -z "$PLUGIN_DESCRIPION" ]
+read -p "Plugin description: " PLUGIN_DESCRIPTION
+if [ -z "$PLUGIN_DESCRIPTION" ]
 then
 	echo "No plugin description supplied. Exiting!"
 	exit 1
@@ -53,7 +53,7 @@ PLUGIN_HOOK_PREFIX=$(hook_prefixify "$PLUGIN_NAMESPACE")
 PLUGIN_NAMESPACE_DOUBLE_SLASHED=$(echo "$PLUGIN_NAMESPACE" | sed 's/\\/\\\\/g')
 
 echo "Slug: $PLUGIN_SLUG"
-echo "Description: $PLUGIN_DESCRIPION"
+echo "Description: $PLUGIN_DESCRIPTION"
 echo "Functions: $PLUGIN_FUNC_PREFIX"
 echo "Classes: $PLUGIN_CLASS_PREFIX"
 echo "Defines: $PLUGIN_DEFINE_PREFIX"
@@ -117,7 +117,7 @@ confirm "Do you wish to create a GitHub repo for this plugin?"
 if ([ $? == 1 ])
 then
 	# Update the repo URL in all files.
-	grep "GH_REPO_URL" . -lr | xargs sed -i "s|GH_REPO_URL|$PLUGIN_SLUG|g"
+	grep "GH_REPO_URL" . -lr | xargs sed -i "s|GH_REPO_URL|dream-encode/$PLUGIN_SLUG|g"
 else
 	# Initialize a git repo and commit the inital state.
 	git init
