@@ -13,7 +13,7 @@ then
 fi
 
 # Namespace.
-read -p "Plugin namespace: " PLUGIN_NAMESPACE
+read -p "Plugin namespace(double backslashes): " PLUGIN_NAMESPACE
 if [ -z "$PLUGIN_NAMESPACE" ]
 then
 	echo "No plugin namespace supplied. Exiting!"
@@ -150,6 +150,10 @@ else
 
 	# Update the repo URL in all files.
 	grep "GH_REPO_URL" . -lr | xargs sed -i "s|GH_REPO_URL|$GH_REPO_URL|g"
+
+	git add .
+	gc "Updated package name"
+	gpu
 fi
 
 # Install NPM dependencies.
