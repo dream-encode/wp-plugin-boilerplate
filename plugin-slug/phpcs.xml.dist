@@ -54,7 +54,7 @@
 		</properties>
 	</rule>
 	<rule ref="PEAR.NamingConventions.ValidClassName.Invalid">
-		<exclude-pattern>/includes/PLUGIN_SLUG-i18n\.php</exclude-pattern>
+		<exclude-pattern>/includes/class-PLUGIN_SLUG-i18n\.php</exclude-pattern>
 	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound">
 		<exclude-pattern>/*/partials/*</exclude-pattern>

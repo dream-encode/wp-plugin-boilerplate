@@ -87,7 +87,7 @@ class PLUGIN_CLASS_PREFIX {
 	 * Include the following files that make up the plugin:
 	 *
 	 * - PLUGIN_CLASS_PREFIX_Loader. Orchestrates the hooks of the plugin.
-	 * - PLUGIN_CLASS_PREFIX_i18n. Defines internationalization functionality.
+	 * - PLUGIN_CLASS_PREFIX_I18n. Defines internationalization functionality.
 	 * - PLUGIN_CLASS_PREFIX_Admin. Defines all hooks for the admin area.
 	 * - PLUGIN_CLASS_PREFIX_Public. Defines all hooks for the public side of the site.
 	 *
@@ -99,9 +99,8 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return void
 	 */
 	private function load_dependencies() {
-
 		/**
-		 * Upgrader
+		 * Installer.
 		 */
 		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/install/class-PLUGIN_SLUG-install.php';
 
@@ -139,7 +138,7 @@ class PLUGIN_CLASS_PREFIX {
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the PLUGIN_CLASS_PREFIX_i18n class in order to set the domain and to register the hook
+	 * Uses the PLUGIN_CLASS_PREFIX_I18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since  1.0.0

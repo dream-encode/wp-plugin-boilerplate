@@ -14,7 +14,7 @@
  * @wordpress-plugin
  * Plugin Name:       PLUGIN_NAME
  * Plugin URI:        https://maxmarineelectronics.com
- * Description:       PLUGIN_DESCRIPTION.
+ * Description:       PLUGIN_DESCRIPTION
  * Version:           1.0.0
  * Author:            David Baumwald
  * Author URI:        https://dream-encode.com
@@ -22,7 +22,7 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       PLUGIN_SLUG
  * Domain Path:       /languages
- * GitHub Plugin URI: dream-encode/GH_REPO_SLUG
+ * GitHub Plugin URI: GH_REPO_URL
  * Release Asset:     true
  */
 
@@ -68,7 +68,7 @@ register_deactivation_hook( __FILE__, 'PLUGIN_FUNC_PREFIX_deactivate' );
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since  0.1.0
+ * @since  1.0.0
  * @return void
  */
 function PLUGIN_FUNC_PREFIX_init() {

@@ -68,7 +68,7 @@ class PLUGIN_CLASS_PREFIX_WC_Logger {
 				error_log(
 					sprintf(
 						'%1$s: %2$s',
-						'PLUGIN_DEFINE_PREFIX',
+						'PLUGIN_SHORT_DEFINE_PREFIX',
 						$data
 					)
 				);

@@ -40,6 +40,6 @@ class PLUGIN_CLASS_PREFIX_Admin {
 
 		$assets_version = ( 'development' === wp_get_environment_type() ) ? (string) time() : PLUGIN_DEFINE_PREFIX_CSS_VERSION;
 
-		$asset_base_path = plugins_url( '/', __FILE__ );
+		$asset_base_path = PLUGIN_DEFINE_PREFIX_PLUGIN_URL . 'admin';
 	}
 }

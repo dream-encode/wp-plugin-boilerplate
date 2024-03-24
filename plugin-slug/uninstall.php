@@ -18,10 +18,10 @@
  * For more information, see the following discussion:
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
- * @link       https://dream-encode.com
- * @since      1.0.0
+ * @link   https://dream-encode.com
+ * @since  1.0.0
  *
- * @package    Max_Marine_Enhanced_Product_Changelogs
+ * @package PLUGIN_CLASS_PREFIX
  */
 
 // If uninstall not called from WordPress, then exit.
