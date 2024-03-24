@@ -117,7 +117,7 @@ confirm "Do you wish to create a GitHub repo for this plugin?"
 if ([ $? == 1 ])
 then
 	# Update the repo URL in all files.
-	grep "GH_REPO_URL" . -lr | xargs sed -i "s/GH_REPO_URL/$PLUGIN_SLUG/g"
+	grep "GH_REPO_URL" . -lr | xargs sed -i "s|GH_REPO_URL|$PLUGIN_SLUG|g"
 else
 	# Initialize a git repo and commit the inital state.
 	git init
@@ -149,7 +149,7 @@ else
 	GH_REPO_URL=$(gh repo view --json nameWithOwner -q ".nameWithOwner")
 
 	# Update the repo URL in all files.
-	grep "GH_REPO_URL" . -lr | xargs sed -i "s/GH_REPO_URL/$GH_REPO_URL/g"
+	grep "GH_REPO_URL" . -lr | xargs sed -i "s|GH_REPO_URL|$GH_REPO_URL|g"
 fi
 
 # Install NPM dependencies.
