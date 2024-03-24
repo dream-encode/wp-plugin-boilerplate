@@ -9,6 +9,12 @@
 			"homepage": "https://dream-encode.com/"
 		}
 	],
+    "scripts": {
+        "lint": "./vendor/bin/phpcs -nps --colors --report-code --report-summary --report-width=80 --cache .",
+        "format": "./vendor/bin/phpcbf --standard=phpcs.xml.dist .",
+        "analyze": "./vendor/bin/phpstan",
+		"test": "composer lint && composer analyze"
+    },
 	"config": {
 		"sort-packages": true,
 		"preferred-install": "dist",
@@ -16,7 +22,6 @@
 			"composer/installers": true,
 			"cweagans/composer-patches": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"roots/wordpress-core-installer": true,
             "phpstan/extension-installer": true
 		}
 	},
@@ -33,11 +38,5 @@
         "vlucas/phpdotenv": "5.5",
         "wp-coding-standards/wpcs": "2.3",
         "yoast/phpunit-polyfills": "^1.0"
-    },
-    "scripts": {
-        "lint": "./vendor/bin/phpcs -nps --colors --report-code --report-summary --report-width=80 --cache .",
-        "format": "./vendor/bin/phpcbf --standard=phpcs.xml.dist .",
-        "analyze": "./vendor/bin/phpstan",
-		"test": "composer lint && composer analyze"
     }
 }
