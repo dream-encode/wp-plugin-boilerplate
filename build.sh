@@ -32,7 +32,7 @@ fi
 PLUGIN_SLUG=$(slugify "$PLUGIN_NAME")
 
 # Functions.
-PLUGIN_FUNC_PREFIX=$(echo "$PLUGIN_SLUG" | tr "-" "_")
+PLUGIN_FUNC_PREFIX=$(wp_replace_dashes_with_underscores "$PLUGIN_SLUG")
 
 # Classes.
 PLUGIN_CLASS_PREFIX=$(echo "$PLUGIN_FUNC_PREFIX" | sed -e 's/\(^\|_\)\([a-z]\)/\1\u\2/g')
@@ -80,10 +80,10 @@ then
 fi
 
 # Copy files.
-rsync -av --exclude='.git' --exclude='node_modules' --exclude='yarn.lock' --exclude='vendor' --exclude='composer.lock' "$SOURCE_PLUGIN_DIR/plugin-slug/" "/c/Users/David Baumwald/tmp/$PLUGIN_SLUG"
+rsync -av --exclude='.git' --exclude='node_modules' --exclude='yarn.lock' --exclude='vendor' --exclude='composer.lock' "$SOURCE_PLUGIN_DIR/plugin-slug/" "$CURRENT_DIR/$PLUGIN_SLUG"
 
 # Move over to the newly created directory.
-cd "/c/Users/David Baumwald/tmp/$PLUGIN_SLUG"
+cd "$CURRENT_DIR/$PLUGIN_SLUG"
 
 # Rename all files with slug.
 for file in $(find .)
@@ -125,7 +125,7 @@ else
 	gc "Initial plugin files"
 
 	# GitHub repo name.
-	read -p "Repo slug: " GH_REPO_SLUG
+	read -p "Repo slug: " -i "$PLUGIN_SLUG" -e GH_REPO_SLUG
 	if [ -z "$GH_REPO_SLUG" ]
 	then
 		echo "No GitHub repo name supplied. Exiting!"
@@ -152,8 +152,11 @@ else
 	grep "GH_REPO_URL" . -lr | xargs sed -i "s|GH_REPO_URL|$GH_REPO_URL|g"
 
 	git add .
-	gc "Updated package name"
-	gpu
+	gc "Initial commit"
+
+	git remote add origin git@github.com:dream-encode/$GH_REPO_SLUG
+
+	git push -u origin main
 fi
 
 # Install NPM dependencies.
