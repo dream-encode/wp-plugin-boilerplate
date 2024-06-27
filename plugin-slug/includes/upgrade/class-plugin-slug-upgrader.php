@@ -1,23 +1,22 @@
 <?php
 /**
-/**
- * Class PLUGIN_CLASS_PREFIX
+ * Class PLUGIN_CLASS_PREFIX_Upgrader
  *
  * @since 1.0.0
  */
 
-namespace PLUGIN_NAMESPACE\Core\Install;
-
-use PLUGIN_NAMESPACE\Core\PLUGIN_CLASS_PREFIX_Functions;
+namespace PLUGIN_NAMESPACE\Core\Upgrade;
 
 defined( 'ABSPATH' ) || exit;
 
+use PLUGIN_NAMESPACE\Core\Log\PLUGIN_CLASS_PREFIX_Upgrader_Logger;
+
 /**
- * Class PLUGIN_CLASS_PREFIX
+ * Class PLUGIN_CLASS_PREFIX_Upgrader
  *
  * @since 1.0.0
  */
-class PLUGIN_CLASS_PREFIX {
+class PLUGIN_CLASS_PREFIX_Upgrader {
 
 	/**
 	 * DB updates and callbacks that need to be run per version.
@@ -70,7 +69,7 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return void
 	 */
 	public static function run_update_callback( $update_callback ) {
-		include_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/PLUGIN_SLUG-update-functions.php';
+		include_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/upgrade/PLUGIN_SLUG-upgrader-functions.php';
 
 		if ( is_callable( $update_callback ) ) {
 			self::run_update_callback_start( $update_callback );
@@ -122,6 +121,12 @@ class PLUGIN_CLASS_PREFIX {
 			return;
 		}
 
+		include_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/log/class-PLUGIN_SLUG-upgrader-logger.php';
+
+		PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+			__( '=================== Beginning Install ===================', 'PLUGIN_SLUG' )
+		);
+
 		// If we made it here nothing is running yet, lets set the transient now.
 		set_transient( 'PLUGIN_ABBR_installing', 'yes', MINUTE_IN_SECONDS * 10 );
 
@@ -129,13 +134,26 @@ class PLUGIN_CLASS_PREFIX {
 
 		self::create_tables();
 
-		self::create_options();
+		self::create_default_options();
 
 		self::update_plugin_version();
 
 		self::maybe_update_db_version();
 
 		delete_transient( 'PLUGIN_ABBR_installing' );
+
+		PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+			__( '=================== End Install ===================', 'PLUGIN_SLUG' )
+		);
+	}
+
+	/**
+	 * Create default options.
+	 *
+	 * @since  1.0.0
+	 * @return void
+	 */
+	protected static function create_default_options() {
 	}
 
 	/**
@@ -167,13 +185,21 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return boolean
 	 */
 	public static function needs_db_update() {
+		PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+			__( 'Checking if updates are needed for this version...', 'PLUGIN_SLUG' )
+		);
+
 		$updates = self::get_db_update_callbacks();
 
 		if ( count( $updates ) < 1 ) {
+			PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+				__( 'No updates found.', 'PLUGIN_SLUG' )
+			);
+
 			return false;
 		}
 
-		$current_db_version = get_option( 'PLUGIN_ABBR_plugin_db_version', null );
+		$current_db_version = get_option( 'PLUGIN_ABBR_database_version', null );
 
 		$update_versions    = array_keys( $updates );
 
@@ -191,6 +217,10 @@ class PLUGIN_CLASS_PREFIX {
 	 */
 	private static function maybe_update_db_version() {
 		if ( self::needs_db_update() ) {
+			PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+				__( 'Version requires updates.', 'PLUGIN_SLUG' )
+			);
+
 			self::update();
 		} else {
 			self::update_db_version();
@@ -204,7 +234,7 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return void
 	 */
 	private static function update_plugin_version() {
-		update_option( 'PLUGIN_ABBR_plugin_version', PLUGIN_DEFINE_PREFIX_PLUGIN_VERSION );
+		update_option( 'PLUGIN_ABBR_plugin_version', PLUGIN_DEFINE_PREFIX_PLUGIN_VERSION, true );
 	}
 
 	/**
@@ -224,21 +254,74 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return void
 	 */
 	private static function update() {
-		$current_db_version = get_option( 'PLUGIN_ABBR_plugin_db_version' );
+		PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+			__( 'Checking updates...', 'PLUGIN_SLUG' )
+		);
+
+		$current_db_version = get_option( 'PLUGIN_ABBR_database_version' );
+		$loop               = 0;
+
+		PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+			sprintf(
+				/* translators: %s current database version. */
+				__( 'Current database version: %s', 'PLUGIN_SLUG' ),
+				$current_db_version
+			)
+		);
 
 		foreach ( self::get_db_update_callbacks() as $version => $update_callbacks ) {
 			if ( version_compare( $current_db_version, $version, '<' ) ) {
+				PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+					sprintf(
+						/* translators: %s current database version. */
+						__( 'Parsing needed updates for version %s', 'PLUGIN_SLUG' ),
+						$version
+					)
+				);
+
 				foreach ( $update_callbacks as $update_callback ) {
-					$update_callback();
+					if ( as_has_scheduled_action( 'PLUGIN_ABBR_run_update_callback', array( $update_callback ), 'PLUGIN_SLUG' ) ) {
+						continue;
+					}
+
+					as_schedule_single_action(
+						time() + $loop,
+						'PLUGIN_ABBR_run_update_callback',
+						array(
+							$update_callback,
+						),
+						'PLUGIN_SLUG'
+					);
+
+					PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+						sprintf(
+							/* translators: %s update hook. */
+							__( 'Scheduled async update for `%s`', 'PLUGIN_SLUG' ),
+							$update_callback
+						)
+					);
+
+					$loop++;
 				}
 			}
 		}
 
 		// After the callbacks finish, update the db version to the current plugin version.
-		$current_db_define_version = PLUGIN_DEFINE_PREFIX_PLUGIN_VERSION;
+		$current_db_define_version = PLUGIN_DEFINE_PREFIX_DATABASE_VERSION;
 
-		if ( version_compare( $current_db_version, $current_db_define_version, '<' ) ) {
-			self::update_db_version( $current_db_define_version );
+		if ( version_compare( $current_db_version, $current_db_define_version, '<' ) && ! as_has_scheduled_action( 'PLUGIN_ABBR_update_db_to_current_version', array(), 'PLUGIN_SLUG' ) ) {
+			as_schedule_single_action(
+				time() + $loop,
+				'PLUGIN_ABBR_update_db_to_current_version',
+				array(
+					$current_db_define_version,
+				),
+				'PLUGIN_SLUG'
+			);
+
+			PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+				__( 'Scheduled async database version update.', 'PLUGIN_SLUG' )
+			);
 		}
 	}
 
@@ -250,25 +333,16 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return void
 	 */
 	public static function update_db_version( $version = null ) {
-		update_option( 'PLUGIN_ABBR_plugin_db_version', is_null( $version ) ? PLUGIN_DEFINE_PREFIX_DATABASE_VERSION : $version );
-	}
+		update_option( 'PLUGIN_ABBR_database_version', is_null( $version ) ? PLUGIN_DEFINE_PREFIX_DATABASE_VERSION : $version, true );
 
-	/**
-	 * Default options.
-	 *
-	 * Sets up the default options used on the settings page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	private static function create_options() {
-		if ( ! get_option( 'PLUGIN_FUNC_PREFIX_settings' ) ) {
-			$defaults = array();
-
-			add_option( 'PLUGIN_FUNC_PREFIX_settings', $defaults );
-		}
+		PLUGIN_CLASS_PREFIX_Upgrader_Logger::log(
+			sprintf(
+				/* translators: %s current database version. */
+				__( 'Updated database version to %s.', 'PLUGIN_SLUG' ),
+				$version
+			)
+		);
 	}
-	/**
 
 	/**
 	 * Set up the database tables which the plugin needs to function.
@@ -287,7 +361,11 @@ class PLUGIN_CLASS_PREFIX {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-		dbDelta( self::get_schema() );
+		$schema = self::get_schema();
+
+		if ( ! empty( $schema ) ) {
+			dbDelta( $schema );
+		}
 	}
 
 	/**
@@ -296,7 +374,7 @@ class PLUGIN_CLASS_PREFIX {
 	 * Changing indexes may cause duplicate index notices in logs due to https://core.trac.wordpress.org/ticket/34870 but dropping
 	 * indexes first causes too much load on some servers/larger DB.
 	 *
-	 * When adding or removing a table, make sure to update the list of tables in Max_Marine_Enhanced_product_Changelogs_Install::get_tables().
+	 * When adding or removing a table, make sure to update the list of tables in PLUGIN_CLASS_PREFIX_Upgrader::get_tables().
 	 *
 	 * @since  1.0.0
 	 * @global WPDB  $wpdb  WordPress database instance global.
@@ -305,11 +383,18 @@ class PLUGIN_CLASS_PREFIX {
 	private static function get_schema() {
 		global $wpdb;
 
-		$collate = '';
+		$charset_collate = '';
 
 		if ( $wpdb->has_cap( 'collation' ) ) {
-			$collate = $wpdb->get_charset_collate();
+			$charset_collate = $wpdb->get_charset_collate();
 		}
+
+		/*
+		 * Indexes have a maximum size of 767 bytes. Historically, we haven't need to be concerned about that.
+		 * As of 4.2, however, we moved to utf8mb4, which uses 4 bytes per character. This means that an index which
+		 * used to have room for floor(767/3) = 255 characters, now only has room for floor(767/4) = 191 characters.
+		 */
+		$max_index_length = 191;
 
 		$tables = "";
 
@@ -327,7 +412,13 @@ class PLUGIN_CLASS_PREFIX {
 	public static function get_tables() {
 		global $wpdb;
 
+		$table_names = array();
+
 		$tables = array();
+
+		foreach ( $table_names as $table_name ) {
+			$tables[ $table_name ] = $wpdb->prefix . $table_name;
+		}
 
 		return $tables;
 	}
@@ -345,7 +436,12 @@ class PLUGIN_CLASS_PREFIX {
 		$tables = static::get_tables();
 
 		foreach ( $tables as $name => $table ) {
-			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query(
+				$wpdb->prepare(
+					'DROP TABLE IF EXISTS %i',
+					$table
+				)
+			);
 		}
 	}
 
@@ -369,4 +465,4 @@ class PLUGIN_CLASS_PREFIX {
 	}
 }
 
-PLUGIN_CLASS_PREFIX::init();
+PLUGIN_CLASS_PREFIX_Upgrader::init();

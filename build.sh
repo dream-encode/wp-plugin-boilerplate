@@ -156,7 +156,13 @@ else
 
 	git remote add origin git@github.com:dream-encode/$GH_REPO_SLUG
 
+	gh repo set-default dream-encode/$GH_REPO_SLUG
+
 	git push -u origin main
+
+	git remote add -f subtree-action-scheduler https://github.com/woocommerce/action-scheduler.git
+
+	git subtree add --prefix libraries/action-scheduler subtree-action-scheduler trunk --squash
 fi
 
 # Install NPM dependencies.

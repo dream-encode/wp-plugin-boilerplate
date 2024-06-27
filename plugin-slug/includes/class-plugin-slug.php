@@ -18,6 +18,7 @@ use PLUGIN_NAMESPACE\Core\PLUGIN_CLASS_PREFIX_Loader;
 use PLUGIN_NAMESPACE\Core\PLUGIN_CLASS_PREFIX_I18n;
 use PLUGIN_NAMESPACE\Admin\PLUGIN_CLASS_PREFIX_Admin;
 use PLUGIN_NAMESPACE\Frontend\PLUGIN_CLASS_PREFIX_Public;
+use PLUGIN_NAMESPACE\Core\Upgrade\PLUGIN_CLASS_PREFIX_Upgrader;
 
 /**
  * The core plugin class.
@@ -99,10 +100,17 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return void
 	 */
 	private function load_dependencies() {
+
 		/**
-		 * Installer.
+		 * Logger
 		 */
-		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/install/class-PLUGIN_SLUG-install.php';
+		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/abstracts/abstract-wc-logger.php';
+		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/log/class-PLUGIN_SLUG-wc-logger.php';
+
+		/**
+		 * Upgrader.
+		 */
+		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/upgrade/class-PLUGIN_SLUG-upgrader.php';
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
@@ -132,6 +140,8 @@ class PLUGIN_CLASS_PREFIX {
 		 */
 		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'public/class-PLUGIN_SLUG-public.php';
 
+		PLUGIN_CLASS_PREFIX_Upgrader::init();
+
 		$this->loader = new PLUGIN_CLASS_PREFIX_Loader();
 	}
 
@@ -158,7 +168,7 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return void
 	 */
 	public function define_tables() {
-		PLUGIN_CLASS_PREFIX_Install::define_tables();
+		PLUGIN_CLASS_PREFIX_Upgrader::define_tables();
 	}
 
 	/**
@@ -186,7 +196,6 @@ class PLUGIN_CLASS_PREFIX {
 	private function define_public_hooks() {
 		$plugin_public = new PLUGIN_CLASS_PREFIX_Public();
 
-		// Before updates.
 		$this->loader->add_action( 'example_function', $plugin_public, 'example_function' );
 	}
 

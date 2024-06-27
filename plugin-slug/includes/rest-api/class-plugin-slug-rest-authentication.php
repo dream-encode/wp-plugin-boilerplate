@@ -227,7 +227,17 @@ class PLUGIN_CLASS_PREFIX_REST_Authentication {
 	 * @return bool
 	 */
 	public static function check_admin_permission() {
-		return current_user_can( 'administrator' );
+		return current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * Check permission if user is editor.
+	 *
+	 * @since  1.0.0
+	 * @return bool
+	 */
+	public static function check_editor_permission() {
+		return current_user_can( 'edit_posts' );
 	}
 
 	/**
@@ -236,8 +246,8 @@ class PLUGIN_CLASS_PREFIX_REST_Authentication {
 	 * @since  1.0.0
 	 * @return bool
 	 */
-	public static function check_user_permission() {
-		return current_user_can( 'edit_posts' );
+	public static function check_woocommerce_shop_manager_permission() {
+		return current_user_can( 'manage_woocommerce' );
 	}
 }
 

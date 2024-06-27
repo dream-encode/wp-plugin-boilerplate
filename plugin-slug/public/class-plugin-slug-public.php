@@ -11,6 +11,8 @@
 
 namespace PLUGIN_NAMESPACE\Frontend;
 
+use PLUGIN_NAMESPACE\Core\Upgrade\PLUGIN_CLASS_PREFIX_Upgrader;
+
 /**
  * The public-facing functionality of the plugin.
  *

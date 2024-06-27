@@ -23,6 +23,7 @@
  * Text Domain:       PLUGIN_SLUG
  * Domain Path:       /languages
  * GitHub Plugin URI: GH_REPO_URL
+ * Primary Branch:    main
  * Release Asset:     true
  */
 

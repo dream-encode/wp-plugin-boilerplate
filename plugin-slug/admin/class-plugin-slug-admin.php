@@ -32,14 +32,86 @@ class PLUGIN_CLASS_PREFIX_Admin {
 	 * @return void
 	 */
 	public function enqueue_styles() {
-		$screen = get_current_screen();
-
-		if ( ! $screen instanceof WP_Screen ) {
+		if ( ! PLUGIN_FUNC_PREFIX_admin_current_screen_has_enqueued_assets() ) {
 			return;
 		}
 
-		$assets_version = ( 'development' === wp_get_environment_type() ) ? (string) time() : PLUGIN_DEFINE_PREFIX_CSS_VERSION;
+		$current_screen = get_current_screen();
 
-		$asset_base_path = PLUGIN_DEFINE_PREFIX_PLUGIN_URL . 'admin';
+		if ( ! $current_screen instanceof WP_Screen ) {
+			return;
+		}
+
+		$screens_to_assets = PLUGIN_FUNC_PREFIX_get_admin_screens_to_assets();
+
+		foreach ( $screens_to_assets as $screen => $assets ) {
+			if ( $current_screen->id !== $screen ) {
+				continue;
+			}
+
+			foreach ( $assets as $asset ) {
+				$asset_base_url = PLUGIN_DEFINE_PREFIX_PLUGIN_URL . 'admin/';
+
+				$asset_file = include( PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . "admin/assets/dist/js/admin-{$asset['name']}.min.asset.php" );
+
+				wp_enqueue_style(
+					"PLUGIN_SLUG-admin-{$asset['name']}",
+					$asset_base_url . "assets/dist/css/admin-{$asset['name']}.min.css",
+					$asset_file['dependencies'],
+					$asset_file['version'],
+					'all'
+				);
+			}
+		}
+	}
+
+	/**
+	 * Register the JavaScript for the admin area.
+	 *
+	 * @since  1.0.0
+	 * @return void
+	 */
+	public function enqueue_scripts() {
+		if ( ! PLUGIN_FUNC_PREFIX_admin_current_screen_has_enqueued_assets() ) {
+			return;
+		}
+
+		$current_screen = get_current_screen();
+
+		if ( ! $current_screen instanceof WP_Screen ) {
+			return;
+		}
+
+		$screens_to_assets = PLUGIN_FUNC_PREFIX_get_admin_screens_to_assets();
+
+		foreach ( $screens_to_assets as $screen => $assets ) {
+			if ( $current_screen->id !== $screen ) {
+				continue;
+			}
+
+			foreach ( $assets as $asset ) {
+				$asset_base_url = PLUGIN_DEFINE_PREFIX_PLUGIN_URL . 'admin/';
+
+				$asset_file = include( PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . "admin/assets/dist/js/admin-{$asset['name']}.min.asset.php" );
+
+				wp_register_script(
+					"PLUGIN_SLUG-admin-{$asset['name']}",
+					$asset_base_url . "assets/dist/js/admin-{$asset['name']}.min.js",
+					$asset_file['dependencies'],
+					$asset_file['version'],
+					array(
+						'in_footer' => true,
+					)
+				);
+
+				if ( ! empty( $asset['localization'] ) ) {
+					wp_localize_script( "PLUGIN_SLUG-admin-{$asset['name']}", 'PLUGIN_ABBR', $asset['localization'] );
+				}
+
+				wp_enqueue_script( "PLUGIN_SLUG-admin-{$asset['name']}" );
+
+				wp_set_script_translations( "PLUGIN_SLUG-admin-{$asset['name']}", 'PLUGIN_SLUG' );
+			}
+		}
 	}
 }

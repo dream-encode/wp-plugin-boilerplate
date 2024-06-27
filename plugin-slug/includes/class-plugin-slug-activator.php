@@ -11,7 +11,7 @@
 
 namespace PLUGIN_NAMESPACE\Core;
 
-use PLUGIN_NAMESPACE\Core\Install\PLUGIN_CLASS_PREFIX_Install;
+use PLUGIN_NAMESPACE\Core\Upgrade\PLUGIN_CLASS_PREFIX_Upgrader;
 
 /**
  * Fired during plugin activation.
@@ -33,6 +33,6 @@ class PLUGIN_CLASS_PREFIX_Activator {
 	 * @return void
 	 */
 	public static function activate() {
-		PLUGIN_CLASS_PREFIX_Install::install();
+		PLUGIN_CLASS_PREFIX_Upgrader::install();
 	}
 }
