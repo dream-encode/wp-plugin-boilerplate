@@ -7,7 +7,7 @@ TEMPLATES_DIR="$SOURCE_PLUGIN_DIR\templates"
 CURRENT_DIR=$(pwd)
 
  # Get plugin name.
-read -p "Plugin name: " PLUGIN_NAME
+read -p "Plugin name: " PLUGIN_NAME -i "Dream Encode - Test"
 if [ -z "$PLUGIN_NAME" ]
 then
 	echo "No plugin name supplied. Exiting!"
@@ -15,7 +15,7 @@ then
 fi
 
 # Namespace.
-read -p "Plugin namespace(double backslashes): " PLUGIN_NAMESPACE
+read -p "Plugin namespace(double backslashes): " PLUGIN_NAMESPACE -i "Dream_Encode\\Test"
 if [ -z "$PLUGIN_NAMESPACE" ]
 then
 	echo "No plugin namespace supplied. Exiting!"
@@ -23,7 +23,7 @@ then
 fi
 
 # Plugin description.
-read -p "Plugin description: " PLUGIN_DESCRIPTION
+read -p "Plugin description: " PLUGIN_DESCRIPTION -i "A custom plugin..."
 if [ -z "$PLUGIN_DESCRIPTION" ]
 then
 	echo "No plugin description supplied. Exiting!"
@@ -52,7 +52,7 @@ PLUGIN_ABBR=$(abbrevify "$PLUGIN_FUNC_PREFIX")
 PLUGIN_HOOK_PREFIX=$(hook_prefixify "$PLUGIN_NAMESPACE")
 
 # Hook prefix.
-PLUGIN_NAMESPACE_DOUBLE_SLASHED=$(echo "$PLUGIN_NAMESPACE" | sed 's/\\/\\\\/g')
+PLUGIN_NAMESPACE_DOUBLE_SLASHED=$(escape_backslashes "$PLUGIN_NAMESPACE")
 
 echo "Slug: $PLUGIN_SLUG"
 echo "Description: $PLUGIN_DESCRIPTION"
@@ -85,10 +85,20 @@ ROBOCOPY_SOURCE_DIR="$CURRENT_DIR$PLUGIN_SLUG"
 ROBOCOPY_EXTRA_EXCLUDE_STRING=""
 
 # Include defaults
+INCLUDE_LIST_TABLE=false
 INCLUDE_REST_API=false
 INCLUDE_LOGGER=false
 INCLUDE_CLI_COMMANDS=false
 INCLUDE_ACTION_SCHEDULER=false
+
+# List Table
+confirm "Include Admin List Table?"
+if ([ $? == 1 ])
+then
+	ROBOCOPY_EXTRA_EXCLUDE_STRING=" //XF $SOURCE_PLUGIN_DIR\plugin-slug\includes\list-table"
+else
+	INCLUDE_LIST_TABLE=true
+fi
 
 # REST API
 confirm "Include REST API?"
@@ -99,7 +109,7 @@ else
 	INCLUDE_REST_API=true
 
 	# REST API namespace.
-	read -p "Plugin REST API Namespace (e.g. max-marine): " PLUGIN_REST_API_NAMESPACE
+	read -p "Plugin REST API Namespace (e.g. dream-encode): " PLUGIN_REST_API_NAMESPACE
 	if [ -z "$PLUGIN_REST_API_NAMESPACE" ]
 	then
 		echo "No plugin REST API namespace supplied. Exiting!"
@@ -125,7 +135,7 @@ else
 	INCLUDE_CLI_COMMANDS=true
 
 	# CLI commmands namespace.
-	read -p "Plugin CLI Command Namespace (e.g. $PLUGIN_ABBR): " PLUGIN_CLI_COMMANDS_NAMESPACE
+	read -p "Plugin CLI Command Namespace (e.g. $PLUGIN_ABBR): " PLUGIN_CLI_COMMANDS_NAMESPACE -i "$PLUGIN_ABBR"
 	if [ -z "$PLUGIN_CLI_COMMANDS_NAMESPACE" ]
 	then
 		echo "No plugin CLI commmands namespace supplied. Exiting!"
@@ -137,6 +147,7 @@ fi
 confirm "Include Action Scheduler?"
 if ([ $? == 1 ])
 then
+	INCLUDE_ACTION_SCHEDULER=false
 else
 	INCLUDE_ACTION_SCHEDULER=true
 fi
@@ -144,7 +155,7 @@ fi
 # Copy files.
 echo "Copying plugin files..."
 # rsync -av --exclude='.git' --exclude='node_modules' --exclude='yarn.lock' --exclude='vendor' --exclude='composer.lock' "$SOURCE_PLUGIN_DIR/plugin-slug/" "$CURRENT_DIR/$PLUGIN_SLUG"
-robocopy "$SOURCE_PLUGIN_DIR\plugin-slug " "$CURRENT_DIR/$PLUGIN_SLUG " //MIR //NFL //NDL //NJH //NJS //NS //NP //NC //XD "$SOURCE_PLUGIN_DIR\plugin-slug\.git" //XD "$SOURCE_PLUGIN_DIR\plugin-slug\node_modules" //XD "$SOURCE_PLUGIN_DIR\plugin-slug\node_modules" //XF "$SOURCE_PLUGIN_DIR\plugin-slug\yarn.lock" //XF "$SOURCE_PLUGIN_DIR\plugin-slug\composer.lock"$ROBOCOPY_EXTRA_EXCLUDE_STRING
+robocopy "$SOURCE_PLUGIN_DIR\plugin-slug " "$CURRENT_DIR/$PLUGIN_SLUG " //MIR //NFL //NDL //NJH //NJS //NS //NP //NC //XD "$SOURCE_PLUGIN_DIR\plugin-slug\.git" //XD "$SOURCE_PLUGIN_DIR\plugin-slug\node_modules" //XD "$SOURCE_PLUGIN_DIR\plugin-slug\node_modules" //XF "$SOURCE_PLUGIN_DIR\plugin-slug\yarn.lock" //XF "$SOURCE_PLUGIN_DIR\plugin-slug\composer.lock"$ROBOCOPY_EXTRA_EXCLUDE_STRING > /dev/null
 
 # Move over to the newly created directory.
 cd "$CURRENT_DIR/$PLUGIN_SLUG"
@@ -158,6 +169,18 @@ done
 
 # Dependencies
 echo "Processing dependencies..."
+
+# List Table
+if [ "$INCLUDE_LIST_TABLE" = true ]
+then
+	echo "Including list table..."
+
+	replace_string_with_template 'PLUGIN_LIST_TABLE_INCLUDE;' "$TEMPLATES_DIR\PLUGIN_LIST_TABLE_INCLUDE.tpl" admin/class-$PLUGIN_SLUG-admin.php
+else
+	echo "Skipping list table..."
+
+	replace_string_with_template "PLUGIN_LIST_TABLE_INCLUDE;" "" "admin/class-$PLUGIN_SLUG-admin.php"
+fi
 
 # Logger
 if [ "$INCLUDE_LOGGER" = true ]
@@ -191,10 +214,12 @@ then
 	echo "Including CLI commands..."
 
 	replace_string_with_template 'PLUGIN_CLI_COMMANDS_INCLUDE;' "$TEMPLATES_DIR\PLUGIN_CLI_COMMANDS_INCLUDE.tpl" includes/class-$PLUGIN_SLUG.php
+	replace_string_with_template 'PLUGIN_CLI_COMMANDS_INIT;' "$TEMPLATES_DIR\PLUGIN_CLI_COMMANDS_INIT.tpl" includes/class-$PLUGIN_SLUG.php
 else
 	echo "Skipping CLI commands..."
 
 	replace_string_with_template "PLUGIN_CLI_COMMANDS_INCLUDE;" "" "includes/class-$PLUGIN_SLUG.php"
+	replace_string_with_template "PLUGIN_CLI_COMMANDS_INIT;" "" "includes/class-$PLUGIN_SLUG.php"
 fi
 
 # Action Scheduler
@@ -237,17 +262,19 @@ fi
 if [ "$INCLUDE_CLI_COMMANDS" = true ]
 	then
 	echo "CLI Commands..."
-	grep "PLUGIN_CLI_COMMANDS_NAMESPACE" . -lr | xargs sed -i "s/PLUGIN_CLI_COMMANDS_NAMESPACE/$PLUGIN_CLI_COMMANDS_NAMESPACE/g"
+	# Has backslashes, so need to escape these.
+	ESCAPED_PLUGIN_CLI_COMMANDS_NAMESPACE=$(escape_backslashes "$PLUGIN_CLI_COMMANDS_NAMESPACE")
+	grep "PLUGIN_CLI_COMMANDS_NAMESPACE" . -lr | xargs sed -i "s/PLUGIN_CLI_COMMANDS_NAMESPACE/$ESCAPED_PLUGIN_CLI_COMMANDS_NAMESPACE/g"
 fi
 
 # In the REST API files, some namespaces are double slashed.  Replace these first to not be capture by main namespace replacements.
 echo "Double Slashed Namespace..."
-ESCAPED_PLUGIN_NAMESPACE_DOUBLE_SLASHED=$(echo "$PLUGIN_NAMESPACE_DOUBLE_SLASHED" | sed 's/\\/\\\\/g')
+ESCAPED_PLUGIN_NAMESPACE_DOUBLE_SLASHED=$(escape_backslashes "$PLUGIN_NAMESPACE_DOUBLE_SLASHED")
 grep "PLUGIN_NAMESPACE_DOUBLE_SLASHED" . -lr | xargs sed -i "s/PLUGIN_NAMESPACE_DOUBLE_SLASHED/$ESCAPED_PLUGIN_NAMESPACE_DOUBLE_SLASHED/g"
 
-# Namespace requires soem special handling due to the backslashes.
+# Namespace requires some special handling due to the backslashes.
 echo "Escaped Namespace..."
-ESCAPED_PLUGIN_NAMESPACE=$(echo "$PLUGIN_NAMESPACE" | sed 's/\\/\\\\/g')
+ESCAPED_PLUGIN_NAMESPACE=$(escape_backslashes "$PLUGIN_NAMESPACE")
 grep "PLUGIN_NAMESPACE" . -lr | xargs sed -i "s/PLUGIN_NAMESPACE/$ESCAPED_PLUGIN_NAMESPACE/g"
 
 # Replace these last so they don't interfere with namespace replacements.

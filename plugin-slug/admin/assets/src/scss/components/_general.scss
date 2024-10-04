@@ -1,0 +1,34 @@
+.new-tab-link {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+
+	.dashicon {
+		margin-left: 10px;
+	}
+}
+
+$copy-url-icon-size: 17px;
+
+.copy-to-clipboard {
+	.dashicon {
+		cursor: pointer;
+		margin-left: 10px;
+		width: $copy-url-icon-size;
+		height: $copy-url-icon-size;
+		font-size: $copy-url-icon-size;
+	}
+
+	.copied-message {
+		margin-left: 10px;
+		animation: fadeOut 3s;
+		color: #1CAC78;
+	}
+}
+
+@keyframes fadeOut {
+	0%   { opacity: 1; }
+	100% { opacity: 0; }
+}

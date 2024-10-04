@@ -12,6 +12,7 @@
 namespace PLUGIN_NAMESPACE\Admin;
 
 use WP_Screen;
+PLUGIN_LIST_TABLE_INCLUDE;
 
 /**
  * The admin-specific functionality of the plugin.

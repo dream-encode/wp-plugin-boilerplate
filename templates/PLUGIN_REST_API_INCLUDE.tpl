@@ -1,4 +1,5 @@
-/**
+
+		/**
 		 * REST API
 		 */
 		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/rest-api/class-PLUGIN_SLUG-rest-response.php';
