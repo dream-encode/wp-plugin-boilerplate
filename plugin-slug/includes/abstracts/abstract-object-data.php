@@ -99,7 +99,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Get object data.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  mixed  $name    Optional. Name of data want to get, true if return all.
 		 * @param  mixed  $default  Default value.
 		 * @return array|mixed
@@ -123,7 +123,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Get data as WC_Datetime object
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  string  $name  Key.
 		 * @return array|WC_Datetime|mixed
 		 */
@@ -136,7 +136,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Get an extra data key.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  string       $name     Key to get.
 		 * @param  false|mixed  $default  Default value.
 		 * @return array|bool|mixed|string
@@ -148,7 +148,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Set object data.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  array|string  $key_or_data  Key to set.
 		 * @param  mixed         $value        Value.
 		 * @param  false|mixed   $extra        Extra params.
@@ -193,7 +193,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Set extra data.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  array|string  $key_or_data  Key.
 		 * @param  string        $value        Value.
 		 * @return $this
@@ -207,7 +207,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Set a WC_DateTime data field.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  string  $key    Key to set.
 		 * @param  mixed   $value  Value.
 		 * @return void
@@ -223,7 +223,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Set a WC_DateTime data field to null.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  string  $key  Key.
 		 * @return void
 		 */
@@ -234,7 +234,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Set data via methods in array.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  array  $data  Array with key is method and value is value to set.
 		 * @return void
 		 * @throws Exception  Exception.
@@ -272,7 +272,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Return the keys of data.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  bool  $extra  Optional. TRUE if including extra data.
 		 * @return array
 		 */
@@ -283,7 +283,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Prefix a set method.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @param  string  $method  Method name.
 		 * @return string
 		 */
@@ -294,7 +294,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Apply the changesethod.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @return void
 		 */
 		public function apply_changes() {
@@ -305,7 +305,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		/**
 		 * Get the changes.
 		 *
-		 * @since  2.0.0
+		 * @since  1.0.0
 		 * @return array
 		 */
 		public function get_changes() {

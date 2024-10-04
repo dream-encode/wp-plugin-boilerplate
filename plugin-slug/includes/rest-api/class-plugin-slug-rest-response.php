@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class PLUGIN_CLASS_PREFIX_REST_Response
  *
- * @since 2.0.0
+ * @since 1.0.0
  */
 class PLUGIN_CLASS_PREFIX_REST_Response {
 	/**

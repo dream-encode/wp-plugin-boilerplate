@@ -149,7 +149,7 @@ class PLUGIN_CLASS_PREFIX_REST_Authentication {
 		$rest_prefix = trailingslashit( rest_get_url_prefix() );
 		$request_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
-		return false !== strpos( $request_uri, $rest_prefix . 'max-marine/' );
+		return false !== strpos( $request_uri, $rest_prefix . 'PLUGIN_REST_NAMESPACE/' );
 	}
 
 	/**

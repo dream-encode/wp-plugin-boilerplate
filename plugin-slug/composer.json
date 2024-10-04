@@ -29,6 +29,7 @@
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^1",
         "php-stubs/woocommerce-stubs": "^7.4",
+        "php-stubs/wp-cli-stubs": "dev-master",
         "phpcompatibility/phpcompatibility-wp": "2.1.4",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "1.9",

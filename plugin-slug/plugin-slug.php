@@ -13,7 +13,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       PLUGIN_NAME
- * Plugin URI:        https://maxmarineelectronics.com
+ * Plugin URI:        https://example.com
  * Description:       PLUGIN_DESCRIPTION
  * Version:           1.0.0
  * Author:            David Baumwald

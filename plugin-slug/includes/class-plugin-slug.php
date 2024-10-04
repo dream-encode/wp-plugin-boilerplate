@@ -80,6 +80,8 @@ class PLUGIN_CLASS_PREFIX {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->define_global_hooks();
+		$this->define_cli_commands();
 	}
 
 	/**
@@ -100,18 +102,14 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return void
 	 */
 	private function load_dependencies() {
-
-		/**
-		 * Logger
-		 */
-		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/abstracts/abstract-wc-logger.php';
-		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/log/class-PLUGIN_SLUG-wc-logger.php';
-
+		PLUGIN_LOGGER_INCLUDE;
+		PLUGIN_ACTION_SCHEDULER_INCLUDE;
 		/**
 		 * Upgrader.
 		 */
 		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/upgrade/class-PLUGIN_SLUG-upgrader.php';
 
+		PLUGIN_REST_API_INCLUDE;
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -196,7 +194,28 @@ class PLUGIN_CLASS_PREFIX {
 	private function define_public_hooks() {
 		$plugin_public = new PLUGIN_CLASS_PREFIX_Public();
 
+		PLUGIN_REST_API_ACTIONS;
 		$this->loader->add_action( 'example_function', $plugin_public, 'example_function' );
+	}
+
+	/**
+	 * Register all of the global hooks .
+	 *
+	 * @since  1.0.0
+	 * @access private
+	 * @return void
+	 */
+	private function define_global_hooks() {
+	}
+
+	/**
+	 * Register custom WP_Cli commands.
+	 *
+	 * @since  1.0.0
+	 * @return void
+	 */
+	private function define_cli_commands() {
+		PLUGIN_CLI_COMMANDS_INIT;
 	}
 
 	/**

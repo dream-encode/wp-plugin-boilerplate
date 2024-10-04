@@ -19,7 +19,7 @@ class PLUGIN_CLASS_PREFIX_Abstract_REST_Controller extends WP_REST_Controller {
 	 * @access  public
 	 * @var     string   $namespace  The current namespace.
 	 */
-	public $namespace = 'max-marine/v1';
+	public $namespace = 'PLUGIN_REST_API_NAMESPACE/v1';
 
 	/**
 	 * The current rest_base.
