@@ -115,4 +115,5 @@ class PLUGIN_CLASS_PREFIX_Admin {
 			}
 		}
 	}
+	PLUGIN_ADMIN_MENU_INIT;
 }

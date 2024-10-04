@@ -85,13 +85,23 @@ ROBOCOPY_SOURCE_DIR="$CURRENT_DIR$PLUGIN_SLUG"
 ROBOCOPY_EXTRA_EXCLUDE_STRING=""
 
 # Include defaults
+INCLUDE_ADMIN_SETTINGS_PAGE=false
 INCLUDE_LIST_TABLE=false
 INCLUDE_REST_API=false
 INCLUDE_LOGGER=false
 INCLUDE_CLI_COMMANDS=false
 INCLUDE_ACTION_SCHEDULER=false
 
-# List Table
+# List Table.
+confirm "Include Admin Settings Page?"
+if ([ $? == 1 ])
+then
+	INCLUDE_ADMIN_SETTINGS_PAGE=false
+else
+	INCLUDE_ADMIN_SETTINGS_PAGE=true
+fi
+
+# List Table.
 confirm "Include Admin List Table?"
 if ([ $? == 1 ])
 then
@@ -100,7 +110,7 @@ else
 	INCLUDE_LIST_TABLE=true
 fi
 
-# REST API
+# REST API.
 confirm "Include REST API?"
 if ([ $? == 1 ])
 then
@@ -117,7 +127,7 @@ else
 	fi
 fi
 
-# Logger
+# Logger.
 confirm "Include logger?"
 if ([ $? == 1 ])
 then
@@ -126,7 +136,7 @@ else
 	INCLUDE_LOGGER=true
 fi
 
-# Logger
+# CLI Commands.
 confirm "Include CLI Commands?"
 if ([ $? == 1 ])
 then
@@ -143,7 +153,7 @@ else
 	fi
 fi
 
-# Action Scheduler
+# Action Scheduler.
 confirm "Include Action Scheduler?"
 if ([ $? == 1 ])
 then
@@ -170,7 +180,19 @@ done
 # Dependencies
 echo "Processing dependencies..."
 
-# List Table
+# Admin settings page.
+if [ "$INCLUDE_ADMIN_SETTINGS_PAGE" = true ]
+then
+	echo "Including admin settings page..."
+
+	replace_string_with_template 'PLUGIN_ADMIN_MENU_INIT;' "$TEMPLATES_DIR\PLUGIN_ADMIN_MENU_INIT.tpl" admin/class-$PLUGIN_SLUG-admin.php
+else
+	echo "Skipping admin settings page..."
+
+	replace_string_with_template "PLUGIN_ADMIN_MENU_INIT;" "" "admin/class-$PLUGIN_SLUG-admin.php"
+fi
+
+# List Table.
 if [ "$INCLUDE_LIST_TABLE" = true ]
 then
 	echo "Including list table..."
@@ -182,7 +204,7 @@ else
 	replace_string_with_template "PLUGIN_LIST_TABLE_INCLUDE;" "" "admin/class-$PLUGIN_SLUG-admin.php"
 fi
 
-# Logger
+# Logger.
 if [ "$INCLUDE_LOGGER" = true ]
 then
 	echo "Including logger..."
@@ -194,7 +216,7 @@ else
 	replace_string_with_template "PLUGIN_LOGGER_INCLUDE;" "" "includes/class-$PLUGIN_SLUG.php"
 fi
 
-# REST API
+# REST API.
 if [ "$INCLUDE_REST_API" = true ]
 then
 	echo "Including REST API..."
@@ -208,7 +230,7 @@ else
 	replace_string_with_template "PLUGIN_REST_API_ACTIONS;" "" "includes/class-$PLUGIN_SLUG.php"
 fi
 
-# CLI Commands
+# CLI Commands.
 if [ "$INCLUDE_CLI_COMMANDS" = true ]
 then
 	echo "Including CLI commands..."
@@ -222,7 +244,7 @@ else
 	replace_string_with_template "PLUGIN_CLI_COMMANDS_INIT;" "" "includes/class-$PLUGIN_SLUG.php"
 fi
 
-# Action Scheduler
+# Action Scheduler.
 if [ "$INCLUDE_ACTION_SCHEDULER" = true ]
 then
 	echo "Including Action Scheduler..."
