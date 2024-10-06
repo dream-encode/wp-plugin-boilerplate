@@ -104,12 +104,14 @@ class PLUGIN_CLASS_PREFIX {
 	private function load_dependencies() {
 		PLUGIN_LOGGER_INCLUDE;
 		PLUGIN_ACTION_SCHEDULER_INCLUDE;
+
 		/**
 		 * Upgrader.
 		 */
 		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/upgrade/class-PLUGIN_SLUG-upgrader.php';
 
 		PLUGIN_REST_API_INCLUDE;
+
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -139,6 +141,8 @@ class PLUGIN_CLASS_PREFIX {
 		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'public/class-PLUGIN_SLUG-public.php';
 
 		PLUGIN_CLASS_PREFIX_Upgrader::init();
+
+		PLUGIN_CLI_COMMANDS_INCLUDE;
 
 		$this->loader = new PLUGIN_CLASS_PREFIX_Loader();
 	}

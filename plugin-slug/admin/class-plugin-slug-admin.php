@@ -106,7 +106,7 @@ class PLUGIN_CLASS_PREFIX_Admin {
 				);
 
 				if ( ! empty( $asset['localization'] ) ) {
-					wp_localize_script( "PLUGIN_SLUG-admin-{$asset['name']}", 'PLUGIN_ABBR', $asset['localization'] );
+					wp_localize_script( "PLUGIN_SLUG-admin-{$asset['name']}", 'PLUGIN_SHORT_DEFINE_PREFIX', $asset['localization'] );
 				}
 
 				wp_enqueue_script( "PLUGIN_SLUG-admin-{$asset['name']}" );
