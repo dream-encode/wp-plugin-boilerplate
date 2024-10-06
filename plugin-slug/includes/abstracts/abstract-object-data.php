@@ -62,7 +62,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		protected $no_cache = false;
 
 		/**
-		 * MMEWOA_Abstract_Object_Data constructor.
+		 * PLUGIN_CLASS_PREFIX_Abstract_Object_Data constructor.
 		 *
 		 * @param  null  $data  Data.
 		 * @return void
@@ -292,7 +292,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		}
 
 		/**
-		 * Apply the changesethod.
+		 * Apply the changes.
 		 *
 		 * @since  1.0.0
 		 * @return void

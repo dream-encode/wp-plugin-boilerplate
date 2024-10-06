@@ -169,6 +169,7 @@ class PLUGIN_CLASS_PREFIX_List_Table extends WP_List_Table {
 		$columns = array(
 			'timestamp' => __( 'Date', 'PLUGIN_SLUG' ),
 			'id'        => __( 'ID', 'PLUGIN_SLUG' ),
+		);
 
 		return $columns;
 	}

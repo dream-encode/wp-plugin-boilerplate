@@ -194,6 +194,10 @@ class PLUGIN_CLASS_PREFIX {
 	private function define_public_hooks() {
 		$plugin_public = new PLUGIN_CLASS_PREFIX_Public();
 
+		$this->loader->add_action( 'upgrader_process_complete', $plugin_public, 'upgrader_process_complete', 10, 2 );
+
+		$this->loader->add_action( 'PLUGIN_FUNC_PREFIX_process_plugin_upgrade', $plugin_public, 'process_plugin_upgrade', 10, 2 );
+
 		PLUGIN_REST_API_ACTIONS;
 		$this->loader->add_action( 'example_function', $plugin_public, 'example_function' );
 	}

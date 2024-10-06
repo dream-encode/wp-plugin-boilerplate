@@ -74,7 +74,7 @@ abstract class PLUGIN_CLASS_PREFIX_Abstract_API {
 	 * @return void
 	 */
 	public function rest_api_includes() {
-		include_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/rest-api/class-mmewoa-rest-authentication.php';
+		include_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/rest-api/class-PLUGIN_SLUG-rest-authentication.php';
 	}
 
 	/**

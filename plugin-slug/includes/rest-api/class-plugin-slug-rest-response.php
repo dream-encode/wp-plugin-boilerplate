@@ -46,7 +46,7 @@ class PLUGIN_CLASS_PREFIX_REST_Response {
 	public $success;
 
 	/**
-	 * MMEWOA_REST_Response constructor.
+	 * PLUGIN_CLASS_PREFIX_REST_Response constructor.
 	 */
 	public function __construct() {
 		$this->data = new stdClass();

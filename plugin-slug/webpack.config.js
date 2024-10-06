@@ -136,6 +136,9 @@ const config = {
 		]
 	},
 	plugins: [
+		new webpack.DefinePlugin( {
+			APP_VERSION: JSON.stringify( require( './package.json' ).version ),
+		} ),
 		new MiniCssExtractPlugin( {
 			filename: 'css/[name].min.css',
 		} ),

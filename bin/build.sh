@@ -7,7 +7,7 @@ TEMPLATES_DIR="$SOURCE_PLUGIN_DIR\templates"
 CURRENT_DIR=$(pwd)
 
  # Get plugin name.
-read -p "Plugin name: " PLUGIN_NAME -i "Dream Encode - Test"
+read -e -p "Plugin name: " -i "Dream Encode - Test" PLUGIN_NAME
 if [ -z "$PLUGIN_NAME" ]
 then
 	echo "No plugin name supplied. Exiting!"
@@ -15,7 +15,7 @@ then
 fi
 
 # Namespace.
-read -p "Plugin namespace(double backslashes): " PLUGIN_NAMESPACE -i "Dream_Encode\\Test"
+read -e -p "Plugin namespace(double backslashes): " -i "Dream_Encode\\\\Test" PLUGIN_NAMESPACE
 if [ -z "$PLUGIN_NAMESPACE" ]
 then
 	echo "No plugin namespace supplied. Exiting!"
@@ -23,7 +23,7 @@ then
 fi
 
 # Plugin description.
-read -p "Plugin description: " PLUGIN_DESCRIPTION -i "A custom plugin..."
+read -e -p "Plugin description: " -i "A custom plugin..." PLUGIN_DESCRIPTION
 if [ -z "$PLUGIN_DESCRIPTION" ]
 then
 	echo "No plugin description supplied. Exiting!"
@@ -119,7 +119,7 @@ else
 	INCLUDE_REST_API=true
 
 	# REST API namespace.
-	read -p "Plugin REST API Namespace (e.g. dream-encode): " PLUGIN_REST_API_NAMESPACE
+	read -e -p "Plugin REST API Namespace (e.g. dream-encode): " PLUGIN_REST_API_NAMESPACE
 	if [ -z "$PLUGIN_REST_API_NAMESPACE" ]
 	then
 		echo "No plugin REST API namespace supplied. Exiting!"
@@ -145,7 +145,7 @@ else
 	INCLUDE_CLI_COMMANDS=true
 
 	# CLI commmands namespace.
-	read -p "Plugin CLI Command Namespace (e.g. $PLUGIN_ABBR): " PLUGIN_CLI_COMMANDS_NAMESPACE -i "$PLUGIN_ABBR"
+	read -e -p "Plugin CLI Command Namespace (e.g. $PLUGIN_ABBR): " -i "$PLUGIN_ABBR" PLUGIN_CLI_COMMANDS_NAMESPACE
 	if [ -z "$PLUGIN_CLI_COMMANDS_NAMESPACE" ]
 	then
 		echo "No plugin CLI commmands namespace supplied. Exiting!"
@@ -302,6 +302,7 @@ grep "PLUGIN_NAMESPACE" . -lr | xargs sed -i "s/PLUGIN_NAMESPACE/$ESCAPED_PLUGIN
 # Replace these last so they don't interfere with namespace replacements.
 echo "Name..."
 grep "PLUGIN_NAME" . -lr | xargs sed -i "s/PLUGIN_NAME/$PLUGIN_NAME/g"
+echo "String replacements complete."
 
 # GitHub Repo.
 confirm "Do you wish to create a GitHub repo for this plugin?"
@@ -367,10 +368,18 @@ else
 	cd "$CURRENT_DIR/$PLUGIN_SLUG"
 fi
 
+# Install third-party dependencies.
+confirm "Install third-party dependencies now?"
+if ([ $? == 1 ])
+then
+	echo "Plugin successfully created."
+	exit
+fi
+
 # Install NPM dependencies.
-#yarn install
+yarn install
 
 # Install composer dependencies.
-#composer install
+composer install
 
 echo "Plugin successfully created."
