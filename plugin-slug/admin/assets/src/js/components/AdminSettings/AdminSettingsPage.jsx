@@ -8,8 +8,7 @@ import {
 	Snackbar,
 	Button,
 	SelectControl,
-	__experimentalHStack as HStack,
-	__experimentalNumberControl as NumberControl
+	__experimentalHStack as HStack
 } from '@wordpress/components'
 
 import {
@@ -74,7 +73,7 @@ const AdminSettingsPage = () => {
 			<div className="settings-header">
 				<div className="settings-container">
 					<div className="settings-logo">
-						<h1>{ __( 'PLUGIN_NAME' ) }</h1>
+						<h1>{ __( 'PLUGIN_NAME', 'PLUGIN_SLUG' ) }</h1>
 					</div>
 				</div>
 			</div>
@@ -88,11 +87,11 @@ const AdminSettingsPage = () => {
 					<Fragment>
 						{ apiSaved && (
 							<Snackbar>
-								<p>{ __( 'Settings saved!' ) }</p>
+								<p>{ __( 'Settings saved!', 'PLUGIN_SLUG' ) }</p>
 							</Snackbar>
 						) }
 
-						<PanelBody title={ __( 'Developer' ) }>
+						<PanelBody title={ __( 'Developer', 'PLUGIN_SLUG' ) }>
 							<PanelRow className="field-row">
 								<SelectControl
 									label={ __( 'Log Level', 'PLUGIN_SLUG' ) }
@@ -115,7 +114,7 @@ const AdminSettingsPage = () => {
 									href="#"
 									onClick={ saveSettings }
 								>
-									{ __( 'Save' ) }
+									{ __( 'Save', 'PLUGIN_SLUG' ) }
 								</Button>
 							</HStack>
 						</PanelBody>
