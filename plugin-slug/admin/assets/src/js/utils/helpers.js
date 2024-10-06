@@ -112,7 +112,7 @@ export const secondsToDhmsShort = ( seconds ) => {
  */
 export const convertTimestampToFriendlyDate = ( timestamp ) => {
 	if ( ! timestamp ) {
-		return __( 'N/A', 'max-marine-ebay-listings-checker' )
+		return __( 'N/A', 'PLUGIN_SLUG' )
 	}
 
 	const date = new Date( timestamp * 1000 )
@@ -134,7 +134,7 @@ export const convertTimestampToFriendlyDate = ( timestamp ) => {
  */
 export const convertTimestampToFriendlyTime = ( timestamp ) => {
 	if ( ! timestamp ) {
-		return __( 'N/A', 'max-marine-ebay-listings-checker' )
+		return __( 'N/A', 'PLUGIN_SLUG' )
 	}
 
 	const date = new Date( timestamp * 1000 )
