@@ -1,9 +1,15 @@
-/* global wp */
-const {
+import {
 	createRoot
-} = wp.element
+} from '@wordpress/element'
+
+import domReady from '@wordpress/dom-ready'
 
 import AdminSettingsPage from './components/AdminSettings/AdminSettingsPage.jsx'
 
-const root = createRoot( document.getElementById( 'PLUGIN_SLUG-plugin-settings' ) )
-root.render( <AdminSettingsPage /> )
+domReady( () => {
+	const root = createRoot(
+		document.getElementById( 'PLUGIN_SLUG-plugin-settings' )
+	)
+
+	root.render( <AdminSettingsPage /> )
+} )

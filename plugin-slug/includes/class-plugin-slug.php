@@ -104,14 +104,8 @@ class PLUGIN_CLASS_PREFIX {
 	private function load_dependencies() {
 		PLUGIN_LOGGER_INCLUDE;
 		PLUGIN_ACTION_SCHEDULER_INCLUDE;
-
-		/**
-		 * Upgrader.
-		 */
-		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'includes/upgrade/class-PLUGIN_SLUG-upgrader.php';
-
+		PLUGIN_UPGRADER_INCLUDE;
 		PLUGIN_REST_API_INCLUDE;
-
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -139,11 +133,8 @@ class PLUGIN_CLASS_PREFIX {
 		 * side of the site.
 		 */
 		require_once PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . 'public/class-PLUGIN_SLUG-public.php';
-
-		PLUGIN_CLASS_PREFIX_Upgrader::init();
-
+		PLUGIN_UPGRADER_INIT;
 		PLUGIN_CLI_COMMANDS_INCLUDE;
-
 		$this->loader = new PLUGIN_CLASS_PREFIX_Loader();
 	}
 
@@ -170,6 +161,10 @@ class PLUGIN_CLASS_PREFIX {
 	 * @return void
 	 */
 	public function define_tables() {
+		if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Upgrader' ) ) {
+			return;
+		}
+
 		PLUGIN_CLASS_PREFIX_Upgrader::define_tables();
 	}
 
@@ -198,12 +193,9 @@ class PLUGIN_CLASS_PREFIX {
 	private function define_public_hooks() {
 		$plugin_public = new PLUGIN_CLASS_PREFIX_Public();
 
-		$this->loader->add_action( 'upgrader_process_complete', $plugin_public, 'upgrader_process_complete', 10, 2 );
-
-		$this->loader->add_action( 'PLUGIN_FUNC_PREFIX_process_plugin_upgrade', $plugin_public, 'process_plugin_upgrade', 10, 2 );
-
-		PLUGIN_REST_API_ACTIONS;
 		$this->loader->add_action( 'example_function', $plugin_public, 'example_function' );
+		PLUGIN_UPGRADER_PUBLIC_ACTIONS;
+		PLUGIN_REST_API_ACTIONS;
 	}
 
 	/**

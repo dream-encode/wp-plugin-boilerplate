@@ -22,7 +22,7 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       PLUGIN_SLUG
  * Domain Path:       /languages
- * GitHub Plugin URI: GH_REPO_URL
+ * GitHub Plugin URI: https://github.com/GH_REPO_URL
  * Primary Branch:    main
  * Release Asset:     true
  */

@@ -88,6 +88,7 @@ ROBOCOPY_EXTRA_EXCLUDE_STRING=""
 INCLUDE_ADMIN_SETTINGS_PAGE=false
 INCLUDE_LIST_TABLE=false
 INCLUDE_REST_API=false
+INCLUDE_UPGRADER=false
 INCLUDE_LOGGER=false
 INCLUDE_CLI_COMMANDS=false
 INCLUDE_ACTION_SCHEDULER=false
@@ -127,13 +128,29 @@ else
 	fi
 fi
 
-# Logger.
-confirm "Include logger?"
+# Upgrader.
+confirm "Include Upgrader?"
 if ([ $? == 1 ])
 then
-	ROBOCOPY_EXTRA_EXCLUDE_STRING="$ROBOCOPY_EXTRA_EXCLUDE_STRING //XF $SOURCE_PLUGIN_DIR\plugin-slug\includes\log"
+	ROBOCOPY_EXTRA_EXCLUDE_STRING=" //XF $SOURCE_PLUGIN_DIR\plugin-slug\includes\upgrade"
 else
+	INCLUDE_UPGRADER=true
+
+	# Require these dependencies.
 	INCLUDE_LOGGER=true
+	INCLUDE_ACTION_SCHEDULER=true
+fi
+
+# Logger.
+if [ ! "$INCLUDE_LOGGER" = true ]
+then
+	confirm "Include logger?"
+	if ([ $? == 1 ])
+	then
+		ROBOCOPY_EXTRA_EXCLUDE_STRING="$ROBOCOPY_EXTRA_EXCLUDE_STRING //XF $SOURCE_PLUGIN_DIR\plugin-slug\includes\log"
+	else
+		INCLUDE_LOGGER=true
+	fi
 fi
 
 # CLI Commands.
@@ -154,12 +171,15 @@ else
 fi
 
 # Action Scheduler.
-confirm "Include Action Scheduler?"
-if ([ $? == 1 ])
+if [ ! "$INCLUDE_ACTION_SCHEDULER" = true ]
 then
-	INCLUDE_ACTION_SCHEDULER=false
-else
-	INCLUDE_ACTION_SCHEDULER=true
+	confirm "Include Action Scheduler?"
+	if ([ $? == 1 ])
+	then
+		INCLUDE_ACTION_SCHEDULER=false
+	else
+		INCLUDE_ACTION_SCHEDULER=true
+	fi
 fi
 
 # Copy files.
@@ -204,6 +224,24 @@ else
 	replace_string_with_template "PLUGIN_LIST_TABLE_INCLUDE;" "" "admin/class-$PLUGIN_SLUG-admin.php"
 fi
 
+# Upgrader.
+if [ "$INCLUDE_UPGRADER" = true ]
+then
+	echo "Including upgrader..."
+
+	replace_string_with_template 'PLUGIN_UPGRADER_INCLUDE;' "$TEMPLATES_DIR\PLUGIN_UPGRADER.tpl" includes/class-$PLUGIN_SLUG.php
+	replace_string_with_template 'PLUGIN_UPGRADER_INIT;' "$TEMPLATES_DIR\PLUGIN_UPGRADER_INIT.tpl" includes/class-$PLUGIN_SLUG.php
+	replace_string_with_template 'PLUGIN_UPGRADER_PUBLIC_ACTIONS;' "$TEMPLATES_DIR\PLUGIN_UPGRADER_PUBLIC_ACTIONS.tpl" includes/class-$PLUGIN_SLUG.php
+	replace_string_with_template 'PLUGIN_UPGRADER_PUBLIC_METHODS;' "$TEMPLATES_DIR\PLUGIN_UPGRADER_PUBLIC_METHODS.tpl" public/class-$PLUGIN_SLUG-public.php
+else
+	echo "Skipping upgrader..."
+
+	replace_string_with_template 'PLUGIN_UPGRADER_INCLUDE;' "" includes/class-$PLUGIN_SLUG.php
+	replace_string_with_template 'PLUGIN_UPGRADER_INIT;' "" includes/class-$PLUGIN_SLUG.php
+	replace_string_with_template 'PLUGIN_UPGRADER_PUBLIC_ACTIONS;' "" includes/class-$PLUGIN_SLUG.php
+	replace_string_with_template 'PLUGIN_UPGRADER_PUBLIC_METHODS;' "" public/class-$PLUGIN_SLUG-public.php
+fi
+
 # Logger.
 if [ "$INCLUDE_LOGGER" = true ]
 then
@@ -223,11 +261,13 @@ then
 
 	replace_string_with_template 'PLUGIN_REST_API_INCLUDE;' "$TEMPLATES_DIR\PLUGIN_REST_API_INCLUDE.tpl" includes/class-$PLUGIN_SLUG.php
 	replace_string_with_template 'PLUGIN_REST_API_ACTIONS;' "$TEMPLATES_DIR\PLUGIN_REST_API_ACTIONS.tpl" includes/class-$PLUGIN_SLUG.php
+	replace_string_with_template 'PLUGIN_REST_API_PUBLIC_METHODS;' "$TEMPLATES_DIR\PLUGIN_REST_API_PUBLIC_METHODS.tpl" public/class-$PLUGIN_SLUG-public.php
 else
 	echo "Skipping REST API..."
 
 	replace_string_with_template "PLUGIN_REST_API_INCLUDE;" "" "includes/class-$PLUGIN_SLUG.php"
 	replace_string_with_template "PLUGIN_REST_API_ACTIONS;" "" "includes/class-$PLUGIN_SLUG.php"
+	replace_string_with_template 'PLUGIN_REST_API_PUBLIC_METHODS;' "" public/class-$PLUGIN_SLUG-public.php
 fi
 
 # CLI Commands.

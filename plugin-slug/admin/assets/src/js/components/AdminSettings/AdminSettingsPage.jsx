@@ -3,68 +3,47 @@ import { __ } from '@wordpress/i18n'
 import {
 	PanelBody,
 	PanelRow,
-	Placeholder,
-	Spinner,
-	Snackbar,
 	Button,
 	SelectControl,
+	Placeholder,
+	Spinner,
 	__experimentalHStack as HStack
 } from '@wordpress/components'
 
 import {
-	Fragment,
-	useState,
-	useEffect,
+	Fragment
 } from '@wordpress/element'
 
-const defaultSettingsState = {
-	'log-level': 'off',
-}
+import {
+	useDispatch
+} from '@wordpress/data'
 
-import { apiGetSettings, apiSaveSettings } from '../../utils/api'
-import { LOG_LEVELS } from '../../utils/constants'
-import { capitalizeFirstLetter } from '../../utils/helpers'
+import {
+	store as noticesStore
+} from '@wordpress/notices'
 
-const mappedLogLevels = LOG_LEVELS.map( ( level ) => ( {
-	label: capitalizeFirstLetter( level ),
-	value: level
-} ) )
+import { useSettings } from '../../hooks/useSettings'
+import Notices from '../Notices/Notices'
 
 const AdminSettingsPage = () => {
-	const [ apiLoaded, setAPILoaded ] = useState( false )
-	const [ apiSaving, setAPISaving ] = useState( false )
-	const [ apiSaved, setAPISaved ]   = useState( false )
-	const [ settings, setSettings ]   = useState( defaultSettingsState )
+    const { createSuccessNotice } = useDispatch( noticesStore )
 
-	useEffect( () => {
-		apiGetSettings()
-			.then( ( response ) => {
-				setSettings( response.data )
+	const {
+		settingsLoaded,
+        pluginLogLevel,
+        updatePluginLogLevel,
+		saveSettings,
+		settingsSaving
+    } = useSettings()
 
-				setAPILoaded( true )
-			} )
-	}, [] )
-
-	const updateSetting = ( key, value ) => {
-		setSettings( ( previousSettings ) => ( {
-			...previousSettings,
-			[ key ]: value,
-		} ) )
-	}
-
-	const saveSettings = async ( event ) => {
+	const updateSettings = async ( event ) => {
 		event.preventDefault()
 
-		setAPISaving( true )
-
-		apiSaveSettings( settings )
+		saveSettings()
 			.then( () => {
-				setAPISaving( false )
-				setAPISaved( true )
-
-				setTimeout( () => {
-					setAPISaved( false )
-				}, 5000 )
+				createSuccessNotice(
+					__( 'Settings saved.', 'PLUGIN_SLUG' )
+				)
 			} )
 	}
 
@@ -79,45 +58,39 @@ const AdminSettingsPage = () => {
 			</div>
 
 			<div className="settings-main">
-				{ ! apiLoaded ? (
+				{ ! settingsLoaded ? (
 					<Placeholder>
 						<Spinner />
 					</Placeholder>
 				) : (
 					<Fragment>
-						{ apiSaved && (
-							<Snackbar>
-								<p>{ __( 'Settings saved!', 'PLUGIN_SLUG' ) }</p>
-							</Snackbar>
-						) }
+						<Notices />
 
-						<PanelBody title={ __( 'Developer', 'PLUGIN_SLUG' ) }>
+						<PanelBody title={ __( 'General', 'PLUGIN_SLUG' ) }>
 							<PanelRow className="field-row">
 								<SelectControl
 									label={ __( 'Log Level', 'PLUGIN_SLUG' ) }
-									value={ settings[ 'log-level' ] || 'off' }
+									value={ pluginLogLevel || 'off' }
 									options={ mappedLogLevels }
-									onChange={ ( value ) => updateSetting( 'log-level', value ) }
+									onChange={ updatePluginLogLevel }
 									__nextHasNoMarginBottom
 								/>
 							</PanelRow>
 						</PanelBody>
-						<PanelBody title={ __( 'Processing' ) }>
-							<HStack
-								alignment="center"
+						<HStack
+							alignment="center"
+						>
+							<Button
+								variant="primary"
+								isBusy={ settingsSaving }
+								isLarge
+								target="_blank"
+								href="#"
+								onClick={ updateSettings }
 							>
-								<Button
-									variant="primary"
-									isBusy={ apiSaving }
-									isLarge
-									target="_blank"
-									href="#"
-									onClick={ saveSettings }
-								>
-									{ __( 'Save', 'PLUGIN_SLUG' ) }
-								</Button>
-							</HStack>
-						</PanelBody>
+								{ __( 'Save', 'PLUGIN_SLUG' ) }
+							</Button>
+						</HStack>
 
 					</Fragment>
 				) }

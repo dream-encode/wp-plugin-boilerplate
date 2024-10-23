@@ -88,7 +88,7 @@ class PLUGIN_CLASS_PREFIX_Upgrader {
 	 * @return void
 	 */
 	protected static function run_update_callback_start( $callback ) {
-		PLUGIN_ABBR_maybe_define_constant( 'PLUGIN_SHORT_DEFINE_PREFIX_UPDATING', true );
+		PLUGIN_FUNC_PREFIX_maybe_define_constant( 'PLUGIN_SHORT_DEFINE_PREFIX_UPDATING', true );
 	}
 
 	/**
@@ -130,7 +130,7 @@ class PLUGIN_CLASS_PREFIX_Upgrader {
 		// If we made it here nothing is running yet, lets set the transient now.
 		set_transient( 'PLUGIN_ABBR_installing', 'yes', MINUTE_IN_SECONDS * 10 );
 
-		PLUGIN_ABBR_maybe_define_constant( 'PLUGIN_SHORT_DEFINE_PREFIX_INSTALLING', true );
+		PLUGIN_FUNC_PREFIX_maybe_define_constant( 'PLUGIN_SHORT_DEFINE_PREFIX_INSTALLING', true );
 
 		self::create_tables();
 
@@ -396,7 +396,7 @@ class PLUGIN_CLASS_PREFIX_Upgrader {
 		 */
 		$max_index_length = 191;
 
-		$tables = "";
+		$tables = '';
 
 		return $tables;
 	}

@@ -1,4 +1,4 @@
-/* global PLUGIN_ABBR, APP_VERSION */
+/* global PLUGIN_SHORT_DEFINE_PREFIX, APP_VERSION */
 import { __ } from '@wordpress/i18n'
 
 import {
@@ -181,5 +181,5 @@ export const addSecondsToCurrentTime = ( seconds ) => {
  * @return string
  */
 export const wpEditPostLinkFromPostId = ( postID ) => {
-	return addQueryArgs( `${ PLUGIN_ABBR.ADMIN_URL }post.php`, { post: postID, action: 'edit' } )
+	return addQueryArgs( `${ PLUGIN_SHORT_DEFINE_PREFIX.ADMIN_URL }post.php`, { post: postID, action: 'edit' } )
 }

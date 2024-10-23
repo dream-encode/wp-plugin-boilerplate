@@ -9,6 +9,7 @@
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/libraries/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/dist/*</exclude-pattern>
 
 	<config name="testVersion" value="8.1-"/>
 
@@ -34,6 +35,7 @@
 		<exclude name="WordPress.PHP.DisallowShortTernary.Found"/>
 		<exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery"/>
 		<exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching"/>
+		<exclude name="WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder"/>
 	</rule>
 	<rule ref="WordPress-Extra"/>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">

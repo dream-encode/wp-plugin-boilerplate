@@ -12,3 +12,5 @@
  */
 
 ?>
+
+<!-- Admin Partial markup -->

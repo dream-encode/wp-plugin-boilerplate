@@ -79,14 +79,7 @@
 			}
 		}
 
-		.components-snackbar {
-			position: fixed;
-			right: 0;
-			bottom: 40px;
-			padding-left: 16px;
-			padding-right: 16px;
-			left: 180px;
-		}
+		@import './components/notices';
 
 		.settings-info {
 			padding: 0 10px 10px;
@@ -115,14 +108,4 @@
 			}
 		}
 	}
-}
-
-@keyframes hideSnackbar {
-    0% {
-        opacity: 100;
-    }
-
-    100% {
-        opacity: 0;
-    }
 }

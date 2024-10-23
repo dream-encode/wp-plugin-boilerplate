@@ -1,3 +1,4 @@
+const webpack                        = require( 'webpack' )
 const { resolve }                    = require( 'path' )
 const MiniCssExtractPlugin           = require( 'mini-css-extract-plugin' )
 const RtlCssPlugin                   = require( 'rtlcss-webpack-plugin' )
@@ -11,12 +12,6 @@ const isProduction = process.argv[ process.argv.indexOf( '--mode' ) + 1 ] === 'p
 
 // Main configuration.
 const config = {
-	entry: {
-		'admin-settings-page': [
-			'./admin/assets/src/js/admin-settings-page.js',
-			'./admin/assets/src/scss/admin-settings-page.scss'
-		],
-	},
 	output: {
 		filename: 'js/[name].min.js',
 		path: resolve( __dirname, 'admin/assets/dist/' ),
@@ -150,4 +145,20 @@ const config = {
 	]
 };
 
-module.exports = config;
+const admin = {
+	...config,
+	entry: {
+		'admin-settings-page': [
+			'./admin/assets/src/js/admin-settings-page.js',
+			'./admin/assets/src/scss/admin-settings-page.scss'
+		],
+	},
+	output: {
+		filename: 'js/[name].min.js',
+		path: resolve( __dirname, 'admin/assets/dist/' )
+	}
+}
+
+module.exports = [
+	admin
+]
