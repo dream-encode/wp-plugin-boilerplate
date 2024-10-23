@@ -39,4 +39,38 @@ class PLUGIN_CLASS_PREFIX_Public {
 	public function example_function( $param ) {
 		return $param;
 	}
+
+	/**
+	 * Register plugin settings.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function register_plugin_settings() {
+		$default = array(
+			'plugin_log_level' => 'off',
+		);
+
+		$schema  = array(
+			'type'       => 'object',
+			'properties' => array(
+				'plugin_log_level' => array(
+					'type' => 'string',
+				),
+			),
+		);
+
+		register_setting(
+			'options',
+			'PLUGIN_FUNC_PREFIX_plugin_settings',
+			array(
+				'type'         => 'object',
+				'default'      => $default,
+				'show_in_rest' => array(
+					'schema' => $schema,
+				),
+			)
+		);
+	}
 }
