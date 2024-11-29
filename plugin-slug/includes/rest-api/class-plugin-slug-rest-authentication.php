@@ -123,8 +123,8 @@ class PLUGIN_CLASS_PREFIX_REST_Authentication {
 			return false;
 		}
 
-		$user = $_SERVER['PHP_AUTH_USER'];
-		$pass = $_SERVER['PHP_AUTH_PW'];
+		$user = wp_unslash( $_SERVER['PHP_AUTH_USER'] );
+		$pass = wp_unslash( $_SERVER['PHP_AUTH_PW'] );
 
 		$authenticated = wp_authenticate_application_password( null, $user, $pass );
 

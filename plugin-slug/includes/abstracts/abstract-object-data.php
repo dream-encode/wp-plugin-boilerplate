@@ -228,7 +228,7 @@ if ( ! class_exists( 'PLUGIN_CLASS_PREFIX_Abstract_Object_Data' ) ) {
 		 * @return void
 		 */
 		public function set_data_null_date( $key ) {
-			$this->set_data( $key, mmewoa_get_sql_null_date() );
+			$this->set_data( $key, '0000-00-00 00:00:00' );
 		}
 
 		/**

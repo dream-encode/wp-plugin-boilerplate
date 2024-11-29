@@ -65,16 +65,8 @@ echo "Abbreviation: $PLUGIN_ABBR"
 echo "Namespace: $(echo "$PLUGIN_NAMESPACE")"
 echo "Namespace (Escaped): $(echo "$PLUGIN_NAMESPACE_DOUBLE_SLASHED")"
 
-# Confirm plugin replacements.
-confirm "Does the above info look good?"
-if ([ $? == 1 ])
-then
-	echo "Exiting."
-	exit 1
-fi
-
 # Confirm plugin name.
-confirm "Confirm: You will be creating a new WP plugin named $PLUGIN_NAME. Continue?"
+confirm "Confirm: You will be creating a new WP plugin named $PLUGIN_NAME with the info above. Continue?"
 if ([ $? == 1 ])
 then
 	echo "Exiting."
@@ -84,7 +76,7 @@ fi
 ROBOCOPY_SOURCE_DIR="$CURRENT_DIR$PLUGIN_SLUG"
 ROBOCOPY_EXTRA_EXCLUDE_STRING=""
 
-# Include defaults
+# Include defaults.
 INCLUDE_ADMIN_SETTINGS_PAGE=false
 INCLUDE_LIST_TABLE=false
 INCLUDE_REST_API=false
@@ -229,7 +221,7 @@ if [ "$INCLUDE_UPGRADER" = true ]
 then
 	echo "Including upgrader..."
 
-	replace_string_with_template 'PLUGIN_UPGRADER_INCLUDE;' "$TEMPLATES_DIR\PLUGIN_UPGRADER.tpl" includes/class-$PLUGIN_SLUG.php
+	replace_string_with_template 'PLUGIN_UPGRADER_INCLUDE;' "$TEMPLATES_DIR\PLUGIN_UPGRADER_INCLUDE.tpl" includes/class-$PLUGIN_SLUG.php
 	replace_string_with_template 'PLUGIN_UPGRADER_INIT;' "$TEMPLATES_DIR\PLUGIN_UPGRADER_INIT.tpl" includes/class-$PLUGIN_SLUG.php
 	replace_string_with_template 'PLUGIN_UPGRADER_PUBLIC_ACTIONS;' "$TEMPLATES_DIR\PLUGIN_UPGRADER_PUBLIC_ACTIONS.tpl" includes/class-$PLUGIN_SLUG.php
 	replace_string_with_template 'PLUGIN_UPGRADER_PUBLIC_METHODS;' "$TEMPLATES_DIR\PLUGIN_UPGRADER_PUBLIC_METHODS.tpl" public/class-$PLUGIN_SLUG-public.php
@@ -349,7 +341,7 @@ confirm "Do you wish to create a GitHub repo for this plugin?"
 if ([ $? == 1 ])
 then
 	# Update the repo URL in all files.
-	grep "GH_REPO_URL" . -lr | xargs sed -i "s|GH_REPO_URL|dream-encode/$PLUGIN_SLUG|g"
+	grep "GH_REPO_URL" . -lr | xargs sed -i "s/GH_REPO_URL/dream-encode\/$PLUGIN_SLUG/g"
 else
 	# Initialize a git repo and commit the inital state.
 	echo "Initing repo..."
