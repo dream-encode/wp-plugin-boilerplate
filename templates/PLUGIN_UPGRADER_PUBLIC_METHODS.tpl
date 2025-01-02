@@ -7,7 +7,7 @@
 	 * @return void
 	 */
 	public function upgrader_process_complete( $upgrader_object, $options ) {
-		if ( isset( $options['plugins'] ) && is_array( $options['plugins'] ) ) {
+		if ( isset( $options['plugins'] ) \&\& is_array( $options['plugins'] ) ) {
 			foreach ( $options['plugins'] as $index => $plugin ) {
 				if ( 'PLUGIN_SLUG/PLUGIN_SLUG.php' === $plugin ) {
 					as_enqueue_async_action( 'PLUGIN_FUNC_PREFIX_process_plugin_upgrade', array(), 'PLUGIN_SLUG' );
