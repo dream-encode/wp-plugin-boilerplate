@@ -2,6 +2,7 @@
 source ~/.bashrc
 
 SOURCE_PLUGIN_DIR="F:\DreamEncodeAssets\WP Plugins\de-wp-plugin-boilerplate"
+HOME_DIR="C:\Users\david"
 TEMPLATES_DIR="$SOURCE_PLUGIN_DIR\templates"
 
 CURRENT_DIR=$(pwd)
@@ -157,7 +158,7 @@ else
 	read -e -p "Plugin CLI Command Namespace (e.g. $PLUGIN_ABBR): " -i "$PLUGIN_ABBR" PLUGIN_CLI_COMMANDS_NAMESPACE
 	if [ -z "$PLUGIN_CLI_COMMANDS_NAMESPACE" ]
 	then
-		echo "No plugin CLI commmands namespace supplied. Exiting!"
+		echo "No plugin CLI commands namespace supplied. Exiting!"
 		exit 1
 	fi
 fi
@@ -335,6 +336,29 @@ grep "PLUGIN_NAMESPACE" . -lr | xargs sed -i "s/PLUGIN_NAMESPACE/$ESCAPED_PLUGIN
 echo "Name..."
 grep "PLUGIN_NAME" . -lr | xargs sed -i "s/PLUGIN_NAME/$PLUGIN_NAME/g"
 echo "String replacements complete."
+
+# Bash alias.
+CLIENT_NAME=$(wp_plugin_get_client)
+
+case "$CLIENT_NAME" in
+	"max-marine")
+		BASH_ALIASES_FILE="$HOME_DIR\.bash_includes\maxmarine.bashrc"
+
+		ALIAS_STRING="alias $PLUGIN_ABBR='cd /f/MaxMarineAssets/Code/wp-content/plugins/$PLUGIN_SLUG'";;
+
+	"squadron-posters")
+		BASH_ALIASES_FILE="$HOME_DIR\.bash_includes\squadronposters.bashrc"
+
+		ALIAS_STRING="alias $PLUGIN_ABBR='cd /f/SquadronPostersAssets/Code/wp-content/plugins/$PLUGIN_SLUG'";;
+esac
+
+if [ ! -z "$BASH_ALIASES_FILE" ]
+then
+	echo "$ALIAS_STRING" >> "$BASH_ALIASES_FILE"
+	echo "Plugin alias '$ALIAS_NAME' added to $BASH_ALIASES_FILE"
+fi
+
+source ~/.bashrc
 
 # GitHub Repo.
 confirm "Do you wish to create a GitHub repo for this plugin?"
