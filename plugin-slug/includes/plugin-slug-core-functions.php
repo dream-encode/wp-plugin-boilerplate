@@ -148,6 +148,23 @@ function PLUGIN_FUNC_PREFIX_admin_screen_enqueued_assets( $screen ) {
 }
 
 /**
+ * Maybe enqueue media, if it hasn't been enqueued already.
+ *
+ * @since  1.0.0
+ * @param  array  $asset  Current asset being checked.
+ * @return void
+ */
+function PLUGIN_FUNC_PREFIX_maybe_enqueue_media( $asset ) {
+	static $enqueued_media = false;
+
+	if ( false === $enqueued_media && ! empty( $asset['enqueue_media'] ) ) {
+		wp_enqueue_media();
+
+		$enqueued_media = true;
+	}
+}
+
+/**
  * Check if an admin screen has any enqueued assets.
  *
  * @since  1.0.0

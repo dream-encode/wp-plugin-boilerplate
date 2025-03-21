@@ -14,20 +14,11 @@ import {
 	Fragment
 } from '@wordpress/element'
 
-import {
-	useDispatch
-} from '@wordpress/data'
-
-import {
-	store as noticesStore
-} from '@wordpress/notices'
-
 import { useSettings } from '../../hooks/useSettings'
+
 import Notices from '../Notices/Notices'
 
 const AdminSettingsPage = () => {
-    const { createSuccessNotice } = useDispatch( noticesStore )
-
 	const {
 		settingsLoaded,
         pluginLogLevel,
@@ -40,11 +31,6 @@ const AdminSettingsPage = () => {
 		event.preventDefault()
 
 		saveSettings()
-			.then( () => {
-				createSuccessNotice(
-					__( 'Settings saved.', 'PLUGIN_SLUG' )
-				)
-			} )
 	}
 
 	return (

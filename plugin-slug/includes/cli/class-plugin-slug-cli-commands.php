@@ -29,10 +29,10 @@ final class PLUGIN_CLASS_PREFIX_CLI_Commands {
 	 * @return void
 	 */
 	public function example_command( $args, $assoc_args ) {
-		$dry_run = WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run' );
+		$dry_run = WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run' ); // @phpstan-ignore-line
 
 		if ( $dry_run ) {
-			WP_CLI::line(
+			WP_CLI::line( // @phpstan-ignore-line
 				__( 'Dry run only.', 'PLUGIN_SLUG' )
 			);
 		}

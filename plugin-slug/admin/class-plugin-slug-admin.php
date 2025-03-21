@@ -58,7 +58,7 @@ class PLUGIN_CLASS_PREFIX_Admin {
 				wp_enqueue_style(
 					"PLUGIN_SLUG-admin-{$asset['name']}",
 					$asset_base_url . "assets/dist/css/admin-{$asset['name']}.min.css",
-					$asset_file['dependencies'],
+					PLUGIN_FUNC_PREFIX_get_style_asset_dependencies( $asset_file['dependencies'] ),
 					$asset_file['version'],
 					'all'
 				);
@@ -91,14 +91,20 @@ class PLUGIN_CLASS_PREFIX_Admin {
 			}
 
 			foreach ( $assets as $asset ) {
+				if ( isset( $asset['conditions'] ) && false === $asset['conditions'] ) {
+					continue;
+				}
+
 				$asset_base_url = PLUGIN_DEFINE_PREFIX_PLUGIN_URL . 'admin/';
 
 				$asset_file = include( PLUGIN_DEFINE_PREFIX_PLUGIN_PATH . "admin/assets/dist/js/admin-{$asset['name']}.min.asset.php" );
 
+				PLUGIN_FUNC_PREFIX_maybe_enqueue_media( $asset );
+
 				wp_register_script(
 					"PLUGIN_SLUG-admin-{$asset['name']}",
 					$asset_base_url . "assets/dist/js/admin-{$asset['name']}.min.js",
-					$asset_file['dependencies'],
+					$asset['dependencies'] ? array_merge( $asset_file['dependencies'], $asset['dependencies'] ) : $asset_file['dependencies'],
 					$asset_file['version'],
 					array(
 						'in_footer' => true,

@@ -65,15 +65,15 @@ class PLUGIN_CLASS_PREFIX_List_Table extends WP_List_Table {
 		if ( isset( $_POST['s'] ) && ! empty( $_POST['s'] ) ) {
 			$search = filter_input( INPUT_POST, 's' );
 
-			$sql .= " AND ( po.order_id = '" . esc_sql( wp_unslash( $search ) ) . "' OR pob.bin_name LIKE '%" . esc_sql( wp_unslash( $search ) ) . "%' )"; // @phpcs:ignore @phpstan-ignore-line
+			$sql .= " AND ( po.order_id = '" . esc_sql( wp_unslash( $search ) ) . "' OR pob.bin_name LIKE '%" . esc_sql( wp_unslash( $search ) ) . "%' )"; // @phpcs:ignore
 		}
 
 		$sql .= ' ORDER BY';
 
  		// @phpcs:ignore
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			$sql .= ' ' . esc_sql( $_REQUEST['orderby'] ); // @phpcs:ignore @phpstan-ignore-line
-			$sql .= ! empty( $_REQUEST['order'] ) ? ' r.' . esc_sql( wp_unslash( $_REQUEST['order'] ) ) : ' ASC'; // @phpcs:ignore @phpstan-ignore-line
+			$sql .= ' ' . esc_sql( $_REQUEST['orderby'] ); // @phpcs:ignore
+			$sql .= ! empty( $_REQUEST['order'] ) ? ' r.' . esc_sql( wp_unslash( $_REQUEST['order'] ) ) : ' ASC'; // @phpcs:ignore
 		} else {
 			$sql .= ' r.timestamp DESC';
 		}
@@ -165,7 +165,7 @@ class PLUGIN_CLASS_PREFIX_List_Table extends WP_List_Table {
 	 * @since  1.0.0
 	 * @return array
 	 */
-	public function get_columns() { // @phpcs:ignore @phpstan-ignore-line
+	public function get_columns() { // @phpcs:ignore
 		$columns = array(
 			'timestamp' => __( 'Date', 'PLUGIN_SLUG' ),
 			'id'        => __( 'ID', 'PLUGIN_SLUG' ),
@@ -206,7 +206,7 @@ class PLUGIN_CLASS_PREFIX_List_Table extends WP_List_Table {
 	 * @since  1.0.0
 	 * @return void
 	 */
-	public function prepare_items() { // @phpcs:ignore @phpstan-ignore-line
+	public function prepare_items() { // @phpcs:ignore
 		$columns  = $this->get_columns();
 		$hidden   = $this->get_hidden_columns();
 		$sortable = $this->get_sortable_columns();

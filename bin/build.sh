@@ -367,7 +367,7 @@ then
 	# Update the repo URL in all files.
 	grep "GH_REPO_URL" . -lr | xargs sed -i "s/GH_REPO_URL/dream-encode\/$PLUGIN_SLUG/g"
 else
-	# Initialize a git repo and commit the inital state.
+	# Initialize a git repo and commit the initial state.
 	echo "Initing repo..."
 	git init
 	git add .
@@ -382,12 +382,14 @@ else
 	fi
 
 	# Public or private repo.
-	PUBLIC_PRIVATE_REPO=" --public"
+	PUBLIC_PRIVATE_REPO=" --private"
 
 	confirm "Is this repo private?"
 	if ([ $? == 1 ])
 	then
-		PUBLIC_PRIVATE_REPO=" --private"
+		PUBLIC_PRIVATE_REPO=" --public"
+		echo "GitHub repo will be public."
+	else
 		echo "GitHub repo will be private."
 	fi
 
